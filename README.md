@@ -93,8 +93,8 @@ plausible typos. It also always offers `TODO_fix_before_demo`,
 | `cursed.chaos.strobeMs` | `2000` | Below 1000 induces nausea. |
 | `cursed.autocorrect.enabled` | `true` | Cursed completions. |
 | `cursed.autocorrect.aggressive` | `true` | Sort cursed suggestions above real ones. Turn it off and they land at the bottom of a hundred-item list where you will never see them. |
-| `cursed.autocorrect.mutateScope` | `"scratch"` | `off`, `scratch` (unsaved buffers only), or `everywhere`. See below. |
-| `cursed.autocorrect.mutateChance` | `0.25` | Odds a finished word gets mangled. |
+| `cursed.autocorrect.mutateScope` | `"auto"` | `auto` (follows the level), `off`, `scratch`, or `everywhere`. See below. |
+| `cursed.autocorrect.mutateChance` | `0.6` | Odds a finished word gets mangled. |
 
 ## Suggest versus rewrite
 
@@ -110,13 +110,19 @@ it, with no completion list involved. That is `cursed.autocorrect.mutateScope`:
 
 | Scope | Behavior |
 |---|---|
+| `auto` | **Default.** Follows the cursed level: nothing at 0, unsaved buffers at 1, **every file at MAXIMUM**. Click the pill twice and your code starts rewriting itself. |
 | `off` | Never rewrites. Suggestions only. |
-| `scratch` | **Default.** Rewrites in unsaved buffers only, so a file on disk cannot be mangled behind your back. `Cmd+N` and start typing to see it. |
-| `everywhere` | Rewrites in every file, including real source on disk. Each rewrite is a single `Cmd+Z`, but it does edit your code. |
+| `scratch` | Rewrites in unsaved buffers only, so a file on disk cannot be mangled behind your back. |
+| `everywhere` | Rewrites in every file regardless of level. |
 
 Cycle through them with `CURSED: Cycle Autocorrect Rewriting` in the command
 palette. Rewriting fires on word boundaries (space or newline) at the odds set
-by `cursed.autocorrect.mutateChance`, so not every word gets hit.
+by `cursed.autocorrect.mutateChance`, default `0.6`, so roughly three words in
+five get hit.
+
+Every rewrite is its own undo stop, so `Cmd+Z` walks them back one at a time.
+If you have autosave on and the level at MAXIMUM, the mangled text does reach
+disk, which is worth knowing before you demo this on a repo you care about.
 
 ## Install
 
@@ -131,7 +137,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.4.0.vsix
+code --install-extension cursed-0.5.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -150,13 +156,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.4.0
+  ~/.vscode/extensions/sbowerma.cursed-0.5.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.4.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.5.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -168,14 +174,14 @@ reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.4.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.5.0
 ```
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.4.0
+# sbowerma.cursed@0.5.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the

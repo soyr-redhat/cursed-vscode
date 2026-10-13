@@ -278,9 +278,20 @@ function makeProvider() {
 //   everywhere any file. Undoable with one Cmd+Z, but it does edit real code.
 let applyingOurOwnEdit = false;
 
+/**
+ * Default is "auto", which ties rewriting to the cursed level like everything
+ * else: off at 0, scratch buffers at 1, and every file at MAXIMUM. Anything
+ * other than "auto" is an explicit override that ignores the level.
+ */
 function mutationScope() {
-  const scope = vscode.workspace.getConfiguration('cursed').get('autocorrect.mutateScope', 'scratch');
-  return ['off', 'scratch', 'everywhere'].includes(scope) ? scope : 'scratch';
+  const cfg = vscode.workspace.getConfiguration('cursed');
+  const explicit = cfg.get('autocorrect.mutateScope', 'auto');
+  if (['off', 'scratch', 'everywhere'].includes(explicit)) return explicit;
+
+  const level = cfg.get('chaos.level', 0);
+  if (level >= 2) return 'everywhere';
+  if (level >= 1) return 'scratch';
+  return 'off';
 }
 
 function eligibleForMutation(document) {
@@ -302,13 +313,16 @@ function handleTyping(event) {
   if (!editor || editor.document !== event.document) return;
 
   const doc = event.document;
-  // change.range.start sits just past the last letter typed, which
-  // getWordRangeAtPosition still counts as inside the word.
-  const hit = wordAt(doc, change.range.start);
+  // change.range.start sits just past the last letter typed. That usually
+  // counts as inside the word, but stepping back one column is the reliable
+  // way to land on it, so try both before giving up.
+  const at = change.range.start;
+  let hit = wordAt(doc, at);
+  if (!hit && at.character > 0) hit = wordAt(doc, at.translate(0, -1));
   if (!hit || hit.word.length < 3) return;
 
   const cfg = vscode.workspace.getConfiguration('cursed');
-  if (Math.random() >= cfg.get('autocorrect.mutateChance', 0.25)) return;
+  if (Math.random() >= cfg.get('autocorrect.mutateChance', 0.6)) return;
 
   const options = suggestionsFor(hit.word).filter((s) => s.text);
   if (options.length === 0) return;

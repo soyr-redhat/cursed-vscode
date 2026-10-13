@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -148,9 +148,10 @@
         },
         "cursed.autocorrect.mutateScope": {
           "type": "string",
-          "enum": ["off", "scratch", "everywhere"],
-          "default": "scratch",
+          "enum": ["auto", "off", "scratch", "everywhere"],
+          "default": "auto",
           "enumDescriptions": [
+            "Follow the cursed level: off at 0, unsaved buffers at 1, every file at MAXIMUM.",
             "Never rewrite. Suggestions only.",
             "Rewrite words as you type, in unsaved buffers only. A file on disk cannot be mangled behind your back.",
             "Rewrite words as you type, in every file. Each one is a single Cmd+Z to undo, but it does edit real code."
@@ -159,10 +160,10 @@
         },
         "cursed.autocorrect.mutateChance": {
           "type": "number",
-          "default": 0.25,
+          "default": 0.6,
           "minimum": 0,
           "maximum": 1,
-          "description": "Probability that a finished word gets mangled when mutate mode is on."
+          "description": "Probability that a finished word gets mangled when rewriting is on."
         }
       }
     }

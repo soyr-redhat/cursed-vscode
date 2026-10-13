@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0
+
+- Rewriting now follows the cursed level by default. `mutateScope` gains an
+  `auto` mode, which is the new default: off at level 0, unsaved buffers at
+  level 1, and every file at MAXIMUM. Clicking the pill twice now makes your
+  code rewrite itself, which is what MAXIMUM should have meant all along.
+- Raise `mutateChance` from `0.25` to `0.6`. At one in four, most words
+  passed through untouched and it read as broken rather than random.
+- Fall back to the previous column when resolving the word at a boundary, so
+  a rewrite is not skipped if the cursor position lands just past the word.
+
 ## 0.4.0
 
 - Fix a bug where words that collide with `Object.prototype` keys

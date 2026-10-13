@@ -167,17 +167,19 @@ async function cycleChaos(context) {
   await applyLevel(context, (chaos.getLevel() + 1) % 3);
 }
 
-const MUTATE_SCOPES = ['off', 'scratch', 'everywhere'];
+const MUTATE_SCOPES = ['auto', 'off', 'scratch', 'everywhere'];
 const MUTATE_BLURB = {
+  auto: 'Autocorrect rewriting now follows the cursed level: off at 0, scratch buffers at 1, every file at MAXIMUM.',
   off: 'Autocorrect will only ever suggest, never rewrite.',
   scratch: 'Autocorrect now rewrites words as you type, in unsaved buffers only.',
   everywhere: 'Autocorrect now rewrites words as you type, in EVERY file. Cmd+Z undoes each one.'
 };
 
-/** off -> scratch -> everywhere -> off. */
+/** auto -> off -> scratch -> everywhere -> auto. */
 async function cycleMutation() {
-  const current = autocorrect.mutationScope();
-  const next = MUTATE_SCOPES[(MUTATE_SCOPES.indexOf(current) + 1) % MUTATE_SCOPES.length];
+  const current = vscode.workspace.getConfiguration('cursed').get('autocorrect.mutateScope', 'auto');
+  const i = MUTATE_SCOPES.indexOf(current);
+  const next = MUTATE_SCOPES[(i < 0 ? 0 : i + 1) % MUTATE_SCOPES.length];
   await vscode.workspace
     .getConfiguration('cursed')
     .update('autocorrect.mutateScope', next, vscode.ConfigurationTarget.Global);
