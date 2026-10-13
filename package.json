@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -85,6 +85,21 @@
         "command": "cursed.mutate",
         "title": "Cycle Autocorrect Rewriting (off / scratch / everywhere)",
         "category": "CURSED"
+      },
+      {
+        "command": "cursed.summon",
+        "title": "Summon The Buddy",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.banish",
+        "title": "Banish The Buddy",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.pickBuddy",
+        "title": "Pick Buddy Images...",
+        "category": "CURSED"
       }
     ],
     "configuration": {
@@ -164,6 +179,66 @@
           "minimum": 0,
           "maximum": 1,
           "description": "Probability that a finished word gets mangled when rewriting is on."
+        },
+        "cursed.buddy.mode": {
+          "type": "string",
+          "enum": ["auto", "off", "on"],
+          "default": "auto",
+          "enumDescriptions": [
+            "Follow the cursed level: never at 0, occasional at 1, three times as often at MAXIMUM.",
+            "Never.",
+            "Always, regardless of level."
+          ],
+          "description": "Whether a buddy periodically appears over your code to offer unwanted advice."
+        },
+        "cursed.buddy.images": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Absolute paths to your own images or animated GIFs. One is picked at random per appearance. Empty uses the bundled sprite. Set this with the 'CURSED: Pick Buddy Images...' command."
+        },
+        "cursed.buddy.imageDir": {
+          "type": "string",
+          "default": "",
+          "description": "A folder to scan for .gif/.png/.webp/.jpg/.svg buddies. Used only when cursed.buddy.images is empty. Drop a pile of classic animated GIFs in a folder and point this at it."
+        },
+        "cursed.buddy.size": {
+          "type": "number",
+          "default": 160,
+          "minimum": 24,
+          "description": "Buddy size in pixels."
+        },
+        "cursed.buddy.float": {
+          "type": "boolean",
+          "default": true,
+          "description": "Lift the buddy out of the line so it overlaps your code. Turn this off if a custom image renders clipped, and it will sit inline at the end of the line instead."
+        },
+        "cursed.buddy.intervalMs": {
+          "type": "number",
+          "default": 90000,
+          "minimum": 5000,
+          "description": "Average milliseconds between appearances, jittered by plus or minus 40 percent. MAXIMUM divides this by three."
+        },
+        "cursed.buddy.durationMs": {
+          "type": "number",
+          "default": 7000,
+          "minimum": 1000,
+          "description": "How long the buddy stays before vanishing."
+        },
+        "cursed.buddy.popups": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a Clippy-style notification with the buddy's advice when it appears."
+        },
+        "cursed.buddy.triggers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "help", "why", "sorry", "please", "bug", "fix", "todo", "hack",
+            "test", "deploy", "production", "friday", "async", "await",
+            "copilot", "claude", "clippy", "bonzi", "buddy"
+          ],
+          "description": "Typing one of these words summons the buddy immediately. Empty disables typing triggers."
         }
       }
     }

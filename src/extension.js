@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const chaos = require('./chaos');
 const autocorrect = require('./autocorrect');
+const buddy = require('./buddy');
 
 const THEME_NAME = 'CURSED (Crimes Against Humanity)';
 const SAVED_KEY = 'cursed.savedSettings';
@@ -205,6 +206,7 @@ async function restore(context) {
 function activate(context) {
   chaos.activate(context);
   autocorrect.activate(context);
+  buddy.activate(context);
 
   status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -1000);
   status.command = 'cursed.cycle';
