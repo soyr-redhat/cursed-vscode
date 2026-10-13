@@ -142,7 +142,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.8.0.vsix
+code --install-extension cursed-0.8.1.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -161,32 +161,50 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.8.0
+  ~/.vscode/extensions/sbowerma.cursed-0.8.1
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.8.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.8.1"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
 
-### Option C: symlink, for hacking on it
-
-Keeps the repo wherever you work and links it in, so edits are live after a
-reload. The clone has to stay where it is.
+### Option C: working on it
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.8.0
+cd cursed-vscode
+npm run reinstall
 ```
+
+`npm run reinstall` packages the vsix and installs it, then verifies VS Code
+actually sees the new version. Run it after every edit, then reload the
+window.
+
+**Do not symlink the repo into `~/.vscode/extensions` yourself.** It looks
+like the convenient option and it quietly breaks. VS Code caches its
+extension list in `extensions.json` using absolute paths, so a symlink named
+`publisher.name-VERSION` goes stale the instant you bump the version in
+`package.json`, and the next launch fails with:
+
+```
+Unable to read file '.../sbowerma.cursed-0.7.1/package.json'
+(Error: Unable to resolve nonexistent file ...)
+```
+
+`npm run reinstall` cleans up after that if it has already happened to you:
+it prunes cache entries for this extension whose folder no longer exists, and
+deletes dangling symlinks left behind by the old approach. It only ever
+touches entries matching this extension's own id, and only dead paths.
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.8.0
+# sbowerma.cursed@0.8.1
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
@@ -237,11 +255,16 @@ npx --yes @vscode/vsce login sbowerma   # paste the PAT
 npm run publish                          # or: npm run publish -- minor
 ```
 
-Regenerate the icon after changing `scripts/make-icon.js`:
+### npm scripts
 
-```sh
-npm run icon
-```
+| Script | What |
+|---|---|
+| `npm run reinstall` | Package and install into VS Code, with cache cleanup and verification. |
+| `npm run package` | Build the vsix only. |
+| `npm run icon` | Regenerate `icon.png` from `scripts/make-icon.js`. |
+| `npm run sprite` | Regenerate the fallback buddy sprite frames. |
+| `npm run buddies` | Fetch more GeoCities GIFs into `media/buddies/`. |
+| `npm run publish` | Publish to the Marketplace. Needs a PAT. |
 
 Note that publishing is close to permanent. You can unpublish a version and
 deprecate an extension, but the publisher ID and the extension ID are yours

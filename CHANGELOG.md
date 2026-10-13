@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.1
+
+- Add `scripts/install-local.sh` (`npm run reinstall`): packages the vsix,
+  installs it, and verifies VS Code reports the new version.
+- It also repairs the failure mode that symlink-based installs cause. VS Code
+  caches its extension list in `extensions.json` with absolute paths, so a
+  hand-made `publisher.name-VERSION` symlink goes stale on every version bump
+  and the next launch fails with "Unable to read file .../package.json". The
+  script prunes cache entries for this extension whose folder is gone and
+  deletes dangling symlinks, touching only this extension's own id and only
+  dead paths.
+- Document why not to symlink the repo into `~/.vscode/extensions`.
+- Add `npm run sprite` and `npm run buddies`.
+
 ## 0.8.0
 
 - Bundle 39 vintage GeoCities GIFs in `media/buddies/`, so the buddy is a

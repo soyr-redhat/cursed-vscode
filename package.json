@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -12,7 +12,10 @@
   },
   "scripts": {
     "icon": "node scripts/make-icon.js",
+    "sprite": "node scripts/make-buddy.js",
+    "buddies": "bash scripts/fetch-buddies.sh media/buddies",
     "package": "npx --yes @vscode/vsce package",
+    "reinstall": "bash scripts/install-local.sh",
     "publish": "npx --yes @vscode/vsce publish"
   },
   "repository": {
