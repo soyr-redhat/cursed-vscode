@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -16,7 +16,8 @@
     "buddies": "bash scripts/fetch-buddies.sh media/buddies",
     "package": "npx --yes @vscode/vsce package",
     "reinstall": "bash scripts/install-local.sh",
-    "publish": "npx --yes @vscode/vsce publish"
+    "publish": "npx --yes @vscode/vsce publish",
+    "check": "node scripts/publish-check.js"
   },
   "repository": {
     "type": "git",
@@ -110,7 +111,11 @@
       "properties": {
         "cursed.chaos.level": {
           "type": "number",
-          "enum": [0, 1, 2],
+          "enum": [
+            0,
+            1,
+            2
+          ],
           "default": 0,
           "enumDescriptions": [
             "Off. A normal editor, like a coward. Your theme and fonts are restored.",
@@ -166,7 +171,12 @@
         },
         "cursed.autocorrect.mutateScope": {
           "type": "string",
-          "enum": ["auto", "off", "scratch", "everywhere"],
+          "enum": [
+            "auto",
+            "off",
+            "scratch",
+            "everywhere"
+          ],
           "default": "auto",
           "enumDescriptions": [
             "Follow the cursed level: off at 0, unsaved buffers at 1, every file at MAXIMUM.",
@@ -185,7 +195,11 @@
         },
         "cursed.buddy.mode": {
           "type": "string",
-          "enum": ["auto", "off", "on"],
+          "enum": [
+            "auto",
+            "off",
+            "on"
+          ],
           "default": "auto",
           "enumDescriptions": [
             "Follow the cursed level: never at 0, occasional at 1, three times as often at MAXIMUM.",
@@ -196,7 +210,9 @@
         },
         "cursed.buddy.images": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "default": [],
           "description": "Absolute paths to your own images or animated GIFs. One is picked at random per appearance. Empty uses the bundled sprite. Set this with the 'CURSED: Pick Buddy Images...' command."
         },
@@ -235,11 +251,29 @@
         },
         "cursed.buddy.triggers": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "default": [
-            "help", "why", "sorry", "please", "bug", "fix", "todo", "hack",
-            "test", "deploy", "production", "friday", "async", "await",
-            "copilot", "claude", "clippy", "bonzi", "buddy"
+            "help",
+            "why",
+            "sorry",
+            "please",
+            "bug",
+            "fix",
+            "todo",
+            "hack",
+            "test",
+            "deploy",
+            "production",
+            "friday",
+            "async",
+            "await",
+            "copilot",
+            "claude",
+            "clippy",
+            "bonzi",
+            "buddy"
           ],
           "description": "Typing one of these words summons the buddy immediately. Empty disables typing triggers."
         }

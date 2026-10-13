@@ -142,7 +142,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.8.1.vsix
+code --install-extension cursed-0.9.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -161,13 +161,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.8.1
+  ~/.vscode/extensions/sbowerma.cursed-0.9.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.8.1"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.9.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -204,7 +204,7 @@ touches entries matching this extension's own id, and only dead paths.
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.8.1
+# sbowerma.cursed@0.9.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
@@ -260,6 +260,7 @@ npm run publish                          # or: npm run publish -- minor
 | Script | What |
 |---|---|
 | `npm run reinstall` | Package and install into VS Code, with cache cleanup and verification. |
+| `npm run check` | Preflight every Marketplace requirement before publishing. |
 | `npm run package` | Build the vsix only. |
 | `npm run icon` | Regenerate `icon.png` from `scripts/make-icon.js`. |
 | `npm run sprite` | Regenerate the fallback buddy sprite frames. |
@@ -279,6 +280,12 @@ It is a text decoration using `contentIconPath`, so the image is drawn
 directly in the editor rather than in a panel or a tab. It appears at the end
 of a short visible line, lifted up out of the line box so it overlaps your
 code.
+
+It follows you. Scroll the line it is standing on off screen and it hops to
+another visible line rather than vanishing; switch files and it comes with
+you. It stays put while its own line is still in view, so small scrolls do
+not make it twitch around. The departure timer keeps running through all of
+this, so it still leaves on schedule.
 
 | Setting | Default | Notes |
 |---|---|---|

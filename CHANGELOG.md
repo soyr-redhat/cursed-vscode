@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.0
+
+- The buddy follows you instead of disappearing. Scrolling its line off
+  screen used to banish it outright, which meant it was rarely visible for
+  its full seven seconds. It now hops to another visible line, and switching
+  files brings it along. It holds still while its own line is in view, so
+  small scrolls do not make it twitch, and the departure timer keeps running
+  so it still leaves on schedule.
+- Handle the editor it was standing in being closed.
+- Add `npm run check`, a preflight for publishing: manifest fields, the
+  five-keyword cap, icon dimensions read from the PNG header, required
+  files, relative image links in the README, a clean package under the
+  50 MB limit, whether the publisher is registered, and whether a valid PAT
+  is stored. Prints the remaining browser steps when something is missing.
+
 ## 0.8.1
 
 - Add `scripts/install-local.sh` (`npm run reinstall`): packages the vsix,

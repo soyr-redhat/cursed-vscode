@@ -40,6 +40,7 @@ let frameTypes = [];
 let frameTimer = null;
 let hideTimer = null;
 let scheduleTimer = null;
+let reanchorTimer = null;
 let frameIndex = 0;
 let frameAnimated = true;
 let activeEditor = null;
@@ -193,11 +194,56 @@ function adviceFor(context) {
 function banish() {
   if (frameTimer) clearInterval(frameTimer);
   if (hideTimer) clearTimeout(hideTimer);
+  if (reanchorTimer) clearTimeout(reanchorTimer);
   frameTimer = null;
   hideTimer = null;
+  reanchorTimer = null;
   clearAll();
   activeEditor = null;
   activeRange = null;
+}
+
+function clearIn(editor) {
+  if (!editor) return;
+  frameTypes.forEach((t) => editor.setDecorations(t, []));
+}
+
+/** Is the line the buddy is standing on still on screen? */
+function anchorStillVisible(editor) {
+  if (!activeRange) return false;
+  const line = activeRange.start.line;
+  return editor.visibleRanges.some((r) => line >= r.start.line && line <= r.end.line);
+}
+
+/**
+ * Hop to a new spot instead of vanishing. The buddy is anchored to a line, so
+ * scrolling used to banish it outright, which meant it was almost never on
+ * screen for its full duration. Now it follows you, and the hide timer is
+ * deliberately left running so it still leaves on schedule.
+ */
+function reanchor(editor) {
+  const target = editor || activeEditor;
+  if (!target || !activeRange) return;
+
+  const next = pickAnchor(target);
+  if (!next) {
+    banish();
+    return;
+  }
+  if (target !== activeEditor) {
+    clearIn(activeEditor);
+    activeEditor = target;
+  }
+  activeRange = next;
+  paintFrame();
+}
+
+function scheduleReanchor(editor) {
+  if (reanchorTimer) clearTimeout(reanchorTimer);
+  reanchorTimer = setTimeout(() => {
+    reanchorTimer = null;
+    reanchor(editor);
+  }, 90);
 }
 
 function summon(context) {
@@ -320,10 +366,30 @@ function activate(context) {
     vscode.commands.registerCommand('cursed.banish', banish),
     vscode.commands.registerCommand('cursed.pickBuddy', pickBuddyImages),
     vscode.workspace.onDidChangeTextDocument(onType),
-    // The sprite is anchored to a line, so it has to go when the view moves.
-    vscode.window.onDidChangeActiveTextEditor(banish),
+    // Follow the user rather than disappearing. Switch files and it comes
+    // with you; scroll its line off screen and it hops somewhere visible.
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+      if (!activeEditor) return;
+      if (!editor) {
+        banish();
+        return;
+      }
+      scheduleReanchor(editor);
+    }),
     vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
-      if (activeEditor && e.textEditor === activeEditor) banish();
+      if (!activeEditor || e.textEditor !== activeEditor) return;
+      // Stay put while its line is still in view, so small scrolls do not
+      // make it twitch around the screen.
+      if (anchorStillVisible(activeEditor)) return;
+      scheduleReanchor(activeEditor);
+    }),
+    // If the editor it was standing in gets closed, there is nowhere to be.
+    vscode.window.onDidChangeVisibleTextEditors((editors) => {
+      if (activeEditor && !editors.includes(activeEditor)) {
+        const fallback = vscode.window.activeTextEditor;
+        if (fallback) scheduleReanchor(fallback);
+        else banish();
+      }
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (!e.affectsConfiguration('cursed')) return;
