@@ -13,11 +13,17 @@ There is a pill in the bottom-right of the status bar. Clicking it cycles:
 
 | Clicks | Level | What happens |
 |---|---|---|
-| 0 | `cursed` (off) | A normal editor, like a coward. |
-| 1 | **CURSED** | ~7% of visible characters get a tier-1 crime: Zapfino, Apple Chancery, Papyrus, Comic Sans, Luminari, red/cyan 3D anaglyph, 9px-spaced small caps, or a dashed-yellow WANTED box. Still arguably legible. |
-| 2 | **MAXIMUM CURSED** | ~50% of characters, in runs of up to four at a time, so whole chunks of words go cursive together. Unlocks every tier-2 style: 210% Impact with a cyan outline, Zapf Dingbats (your letter becomes an unrelated symbol), 45% subscript, rotated 17°, rotated 180°, gaussian blur, 18% opacity ghost text, and three that staple 💀 / ✨ / 👀 onto your identifiers. It strobes every two seconds. The cursed autocorrect is force-promoted above your real IntelliSense. |
+| 0 | `cursed` (off) | A normal editor, like a coward. Your original theme, fonts, and cursor are put back exactly as they were. |
+| 1 | **CURSED** | Switches to the CURSED color theme. ~7% of visible characters get a tier-1 crime: Zapfino, Apple Chancery, Papyrus, Comic Sans, Luminari, red/cyan 3D anaglyph, 9px-spaced small caps, or a dashed-yellow WANTED box. Your editor font is left alone, so this is still arguably workable. |
+| 2 | **MAXIMUM CURSED** | Everything above, plus **Zapfino as your actual editor font**, a 6px block-outline cursor, 46px line height, and Papyrus in the terminal. ~50% of characters get cursed, in runs of up to four at a time, so whole chunks of words go cursive together. Unlocks every tier-2 style: 210% Impact with a cyan outline, Zapf Dingbats (your letter becomes an unrelated symbol), 45% subscript, rotated 17°, rotated 180°, gaussian blur, 18% opacity ghost text, and three that staple 💀 / ✨ / 👀 onto your identifiers. It strobes every two seconds. The cursed autocorrect is force-promoted above your real IntelliSense. |
 
 Click a third time and it all stops.
+
+The level is the single source of truth. Before the first change, the extension
+snapshots every setting it is about to touch, then reconciles on each level
+change: whatever the new level wants gets set, and whatever it does not want
+gets put back the way it was found. So `2 → 1` drops the Zapfino but keeps the
+colors, and anything `→ 0` undoes the lot.
 
 ## What it actually does
 
@@ -27,8 +33,8 @@ has been thoroughly shuffled so red text is green. Every token type gets a
 clashing color plus some combination of bold, italic, underline, and
 strikethrough. Constants are struck through for no reason.
 
-The theme is independent of the chaos level. Turning the chaos off does not
-revert your colors, and vice versa.
+The theme is applied and reverted by the chaos level, so the status bar pill
+is the only control you need.
 
 **2. The chaos layer.** A color theme cannot set a font family or a font size,
 so this part is an extension. It smuggles CSS through a text decoration's
@@ -77,7 +83,8 @@ plausible typos. It also always offers `TODO_fix_before_demo`,
 
 | Setting | Default | Notes |
 |---|---|---|
-| `cursed.chaos.level` | `1` | `0` off, `1` mild, `2` MAXIMUM. |
+| `cursed.chaos.level` | `0` | `0` off, `1` mild, `2` MAXIMUM. Drives the theme and fonts too. |
+| `cursed.restoreTheme` | `""` | Theme to return to on off, if CURSED was already active when the snapshot was taken. Empty means the VS Code default. |
 | `cursed.chaos.mildIntensity` | `0.07` | Fraction of characters cursed at level 1. |
 | `cursed.chaos.maxIntensity` | `0.5` | Fraction at level 2. `1.0` is a war crime. |
 | `cursed.chaos.maxDecorations` | `400` | Per-render cap. Level 2 triples it. |
@@ -103,11 +110,11 @@ Clone it, then symlink it into your extensions directory. The folder name
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.1.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.2.0
 ```
 
-Then reload the window (`Cmd+Shift+P`, "Developer: Reload Window"). Pick the
-theme from `Cmd+K Cmd+T`, or just run `CURSED: Embrace The Chaos`.
+Then reload the window (`Cmd+Shift+P`, "Developer: Reload Window"). A fresh
+install is inert: click the status bar pill to start.
 
 To build a shareable `.vsix`:
 

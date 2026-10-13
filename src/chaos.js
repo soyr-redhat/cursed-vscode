@@ -198,9 +198,9 @@ function rand(seedStr) {
 }
 
 function getLevel() {
-  const raw = vscode.workspace.getConfiguration('cursed').get('chaos.level', MILD);
+  const raw = vscode.workspace.getConfiguration('cursed').get('chaos.level', OFF);
   const n = Math.round(Number(raw));
-  if (!Number.isFinite(n)) return MILD;
+  if (!Number.isFinite(n)) return OFF;
   return Math.min(MAXIMUM, Math.max(OFF, n));
 }
 

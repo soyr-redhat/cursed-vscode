@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "repository": {
@@ -78,13 +78,18 @@
         "cursed.chaos.level": {
           "type": "number",
           "enum": [0, 1, 2],
-          "default": 1,
+          "default": 0,
           "enumDescriptions": [
-            "Off. A normal editor, like a coward.",
-            "Mildly cursed. Occasional cursive, Comic Sans, and 3D anaglyph letters.",
-            "MAXIMUM. Whole chunks of words rotate, blur, invert, turn into dingbats, and sprout emoji. Strobes. Autocorrect outranks your real IntelliSense."
+            "Off. A normal editor, like a coward. Your theme and fonts are restored.",
+            "Mildly cursed. The color theme, plus occasional cursive, Comic Sans, and 3D anaglyph letters.",
+            "MAXIMUM. Everything above, plus Zapfino as your editor font, Papyrus in the terminal, and whole chunks of words that rotate, blur, invert, turn into dingbats, and sprout emoji. Strobes. Autocorrect outranks your real IntelliSense."
           ],
-          "description": "How cursed. The status bar pill cycles 0 to 1 to 2 and back to 0."
+          "description": "How cursed. The status bar pill cycles 0 to 1 to 2 and back to 0, applying and reverting your theme and fonts as it goes."
+        },
+        "cursed.restoreTheme": {
+          "type": "string",
+          "default": "",
+          "description": "Theme to return to when the chaos is switched off, if CURSED was already active when the extension first took a snapshot. Leave empty to fall back to the VS Code default."
         },
         "cursed.chaos.mildIntensity": {
           "type": "number",
