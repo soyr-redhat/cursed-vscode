@@ -142,7 +142,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.7.0.vsix
+code --install-extension cursed-0.7.1.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -161,13 +161,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.7.0
+  ~/.vscode/extensions/sbowerma.cursed-0.7.1
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.7.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.7.1"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -179,14 +179,14 @@ reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.7.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.7.1
 ```
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.7.0
+# sbowerma.cursed@0.7.1
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
@@ -289,10 +289,28 @@ Animated GIFs animate on their own, so the frame flipbook is skipped for
 custom images. For a whole folder, set `cursed.buddy.imageDir` and it is
 scanned for `.gif`, `.png`, `.webp`, `.jpg`, and `.svg`.
 
-If you want something freely redistributable to actually bundle, these are
-clean sources: [GifCities](https://gifcities.org) (the Internet Archive's
-GeoCities collection), [Openclipart](https://openclipart.org) (CC0), and
-Wikimedia Commons public-domain animations.
+### The fetch script
+
+To get a folder of genuinely stupid vintage GIFs in one go:
+
+```sh
+./scripts/fetch-buddies.sh ~/Pictures/cursed-buddies
+```
+
+It scrapes [GifCities](https://gifcities.org), the Internet Archive's search
+engine over every animated GIF rescued from GeoCities, across sixteen search
+terms (`pirate`, `dancing+baby`, `skull`, `wizard`, `ufo`, `hamster`,
+`dinosaur`, and so on). Then it runs `scripts/filter-buddies.js`, which throws
+out everything that is not actually usable: GeoCities is overwhelmingly 20x20
+bullet points, divider bars, and static icons, so the filter keeps only images
+between 60 and 400 pixels with at least two frames. Expect roughly 40 keepers
+out of 90 downloads.
+
+It prints the `imageDir` line to paste when it finishes.
+
+These GIFs are archived web content of unclear provenance. Pointing your own
+editor at them is fine. Redistributing them is not, which is why this is a
+script rather than a committed media folder.
 
 ### Typing triggers
 

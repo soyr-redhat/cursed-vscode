@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.1
+
+- Add `scripts/fetch-buddies.sh`, which pulls vintage GeoCities GIFs from the
+  Internet Archive's GifCities across sixteen search terms and prunes them
+  with `scripts/filter-buddies.js` down to animated images between 60 and 400
+  pixels. GeoCities is overwhelmingly tiny bullet points and divider bars, so
+  roughly half of what comes down gets rejected.
+- No art is committed. The GIFs are archived web content of unclear
+  provenance, so the repo ships the script, not the results.
+
 ## 0.7.0
 
 - Add the buddy: a small purple ape that periodically appears over your code,
