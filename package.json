@@ -1,0 +1,144 @@
+{
+  "name": "cursed",
+  "displayName": "CURSED: Deluxe Ransom Note Edition",
+  "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
+  "version": "0.1.0",
+  "publisher": "sbowerma",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soyr-redhat/cursed-vscode.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "theme",
+    "cursed",
+    "comic sans",
+    "zapfino",
+    "regret"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "CURSED (Crimes Against Humanity)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/cursed-color-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cursed.cycle",
+        "title": "Cycle The Chaos (off / mild / MAXIMUM)",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.off",
+        "title": "Make It Stop",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.mild",
+        "title": "Mildly Cursed",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.maximum",
+        "title": "MAXIMUM CURSED",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.embrace",
+        "title": "Embrace The Chaos (theme + cursive fonts)",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.restore",
+        "title": "Undo My Mistakes (restore my old settings)",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.reroll",
+        "title": "Reroll The Dice",
+        "category": "CURSED"
+      }
+    ],
+    "configuration": {
+      "title": "CURSED",
+      "properties": {
+        "cursed.chaos.level": {
+          "type": "number",
+          "enum": [0, 1, 2],
+          "default": 1,
+          "enumDescriptions": [
+            "Off. A normal editor, like a coward.",
+            "Mildly cursed. Occasional cursive, Comic Sans, and 3D anaglyph letters.",
+            "MAXIMUM. Whole chunks of words rotate, blur, invert, turn into dingbats, and sprout emoji. Strobes. Autocorrect outranks your real IntelliSense."
+          ],
+          "description": "How cursed. The status bar pill cycles 0 to 1 to 2 and back to 0."
+        },
+        "cursed.chaos.mildIntensity": {
+          "type": "number",
+          "default": 0.07,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of visible characters cursed at level 1."
+        },
+        "cursed.chaos.maxIntensity": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of visible characters cursed at level 2. 1.0 is a war crime."
+        },
+        "cursed.chaos.maxDecorations": {
+          "type": "number",
+          "default": 400,
+          "description": "Per-render cap on decorated runs, so your laptop survives. Level 2 triples this."
+        },
+        "cursed.chaos.strobe": {
+          "type": "boolean",
+          "default": true,
+          "description": "At MAXIMUM, reshuffle which characters are cursed on a timer."
+        },
+        "cursed.chaos.strobeMs": {
+          "type": "number",
+          "default": 2000,
+          "minimum": 250,
+          "description": "Strobe interval in milliseconds. Below 1000 induces nausea."
+        },
+        "cursed.autocorrect.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Offer deeply confident, deeply wrong completions."
+        },
+        "cursed.autocorrect.aggressive": {
+          "type": "boolean",
+          "default": false,
+          "description": "Sort cursed suggestions ABOVE your real IntelliSense. Forced on at MAXIMUM."
+        },
+        "cursed.autocorrect.mutate": {
+          "type": "boolean",
+          "default": false,
+          "description": "Actually rewrite words as you type them, phone-autocorrect style. Only ever runs in unsaved scratch buffers, never in a real file."
+        },
+        "cursed.autocorrect.mutateChance": {
+          "type": "number",
+          "default": 0.25,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Probability that a finished word gets mangled when mutate mode is on."
+        }
+      }
+    }
+  }
+}
