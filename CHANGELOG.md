@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0
+
+- The status bar control is now icon only: `circle-slash` at off, `check` at
+  mild, `flame` at MAXIMUM. The text labels were taking up a lot of room for
+  a joke extension you leave installed.
+- Only MAXIMUM keeps a colored background. Off and mild are now visually
+  quiet.
+- Drop the icon that cycled every two seconds at MAXIMUM. With the label
+  gone the icon is the only state indicator, so it needs to hold still. The
+  tooltip describes the current level instead.
+
 ## 0.5.0
 
 - Rewriting now follows the cursed level by default. `mutateScope` gains an

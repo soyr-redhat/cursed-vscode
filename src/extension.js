@@ -53,9 +53,6 @@ function desiredFor(level) {
   return {};
 }
 
-// The MAXIMUM pill fidgets between these so it is impossible to ignore.
-const MAX_ICONS = ['$(flame)', '$(alert)', '$(zap)', '$(bug)', '$(eye)'];
-
 const EMBRACE_QUIPS = [
   'Your settings have been saved. Your dignity has not.',
   'This is reversible. Your reputation may not be.',
@@ -64,24 +61,26 @@ const EMBRACE_QUIPS = [
 ];
 
 let status;
-let iconIndex = 0;
-let iconTimer;
 
+/**
+ * Icon only, no label. The tooltip carries the explanation, since there is no
+ * room for it. Only MAXIMUM gets a colored background: at that point being
+ * subtle would be dishonest.
+ */
 function updateStatus() {
   const level = chaos.getLevel();
 
   if (level === OFF) {
-    status.text = '$(circle-slash) cursed';
-    status.tooltip = 'Off. Click once for a light haunting, twice for MAXIMUM.';
+    status.text = '$(circle-slash)';
+    status.tooltip = 'CURSED: off. Click once for mild, twice for MAXIMUM.';
     status.backgroundColor = undefined;
   } else if (level === MILD) {
-    status.text = '$(flame) CURSED';
-    status.tooltip = 'Mildly cursed. Click again for MAXIMUM. Once more to stop.';
-    status.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+    status.text = '$(check)';
+    status.tooltip = 'CURSED: mild. Theme on, fonts untouched. Click for MAXIMUM.';
+    status.backgroundColor = undefined;
   } else {
-    const icon = MAX_ICONS[iconIndex % MAX_ICONS.length];
-    status.text = `${icon} MAXIMUM CURSED ${icon}`;
-    status.tooltip = 'There is no higher setting. Click to return to safety.';
+    status.text = '$(flame)';
+    status.tooltip = 'CURSED: MAXIMUM. Click to return to safety.';
     status.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
   }
   status.show();
@@ -212,13 +211,7 @@ function activate(context) {
   context.subscriptions.push(status);
   updateStatus();
 
-  iconTimer = setInterval(() => {
-    iconIndex++;
-    if (chaos.getLevel() === MAXIMUM) updateStatus();
-  }, 2000);
-
   context.subscriptions.push(
-    { dispose: () => clearInterval(iconTimer) },
     vscode.commands.registerCommand('cursed.cycle', () => cycleChaos(context)),
     vscode.commands.registerCommand('cursed.off', () => applyLevel(context, OFF)),
     vscode.commands.registerCommand('cursed.mild', () => applyLevel(context, MILD)),
@@ -233,8 +226,6 @@ function activate(context) {
   );
 }
 
-function deactivate() {
-  if (iconTimer) clearInterval(iconTimer);
-}
+function deactivate() {}
 
 module.exports = { activate, deactivate };

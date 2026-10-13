@@ -9,15 +9,17 @@ Everything is reversible and everything has an off switch.
 
 ## The three levels
 
-There is a pill in the bottom-right of the status bar. Clicking it cycles:
+There is a single icon in the bottom-right of the status bar. No label, just
+the glyph. Clicking it cycles:
 
-| Clicks | Level | What happens |
+| Clicks | Icon | What happens |
 |---|---|---|
-| 0 | `cursed` (off) | A normal editor, like a coward. Your original theme, fonts, and cursor are put back exactly as they were. |
-| 1 | **CURSED** | Switches to the CURSED color theme. ~7% of visible characters get a tier-1 crime: Zapfino, Apple Chancery, Papyrus, Comic Sans, Luminari, red/cyan 3D anaglyph, 9px-spaced small caps, or a dashed-yellow WANTED box. Your editor font is left alone, so this is still arguably workable. |
-| 2 | **MAXIMUM CURSED** | Everything above, plus **Zapfino as your actual editor font**, a 6px block-outline cursor, 46px line height, and Papyrus in the terminal. ~50% of characters get cursed, in runs of up to four at a time, so whole chunks of words go cursive together. Unlocks every tier-2 style: 210% Impact with a cyan outline, Zapf Dingbats (your letter becomes an unrelated symbol), 45% subscript, rotated 17°, rotated 180°, gaussian blur, 18% opacity ghost text, and three that staple 💀 / ✨ / 👀 onto your identifiers. It strobes every two seconds. The cursed autocorrect is force-promoted above your real IntelliSense. |
+| 0 | 🚫 `circle-slash` | A normal editor, like a coward. Your original theme, fonts, and cursor are put back exactly as they were. |
+| 1 | ✅ `check` | Switches to the CURSED color theme. ~7% of visible characters get a tier-1 crime: Zapfino, Apple Chancery, Papyrus, Comic Sans, Luminari, red/cyan 3D anaglyph, 9px-spaced small caps, or a dashed-yellow WANTED box. Your editor font is left alone, so this is still arguably workable. |
+| 2 | 🔥 `flame` (red background) | Everything above, plus **Zapfino as your actual editor font**, a 6px block-outline cursor, 46px line height, and Papyrus in the terminal. ~50% of characters get cursed, in runs of up to four at a time, so whole chunks of words go cursive together. Unlocks every tier-2 style: 210% Impact with a cyan outline, Zapf Dingbats (your letter becomes an unrelated symbol), 45% subscript, rotated 17°, rotated 180°, gaussian blur, 18% opacity ghost text, and three that staple 💀 / ✨ / 👀 onto your identifiers. It strobes every two seconds. The cursed autocorrect is force-promoted above your real IntelliSense. |
 
-Click a third time and it all stops.
+Click a third time and it all stops. The icon is the only state indicator,
+so hover it for a tooltip describing what the current level is doing.
 
 The level is the single source of truth. Before the first change, the extension
 snapshots every setting it is about to touch, then reconciles on each level
@@ -137,7 +139,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.5.0.vsix
+code --install-extension cursed-0.6.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -156,13 +158,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.5.0
+  ~/.vscode/extensions/sbowerma.cursed-0.6.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.5.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.6.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -174,14 +176,14 @@ reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.5.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.6.0
 ```
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.5.0
+# sbowerma.cursed@0.6.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
