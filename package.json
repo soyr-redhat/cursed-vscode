@@ -2,9 +2,19 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "sbowerma",
   "license": "MIT",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#FF00FF",
+    "theme": "dark"
+  },
+  "scripts": {
+    "icon": "node scripts/make-icon.js",
+    "package": "npx --yes @vscode/vsce package",
+    "publish": "npx --yes @vscode/vsce publish"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/soyr-redhat/cursed-vscode.git"

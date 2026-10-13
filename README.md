@@ -116,7 +116,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.2.0.vsix
+code --install-extension cursed-0.3.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -135,13 +135,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.2.0
+  ~/.vscode/extensions/sbowerma.cursed-0.3.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.2.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.3.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -153,14 +153,14 @@ reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.2.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.3.0
 ```
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.2.0
+# sbowerma.cursed@0.3.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
@@ -190,6 +190,36 @@ breaks, but the comedy is uneven:
   DejaVu set, the generic `cursive` and `fantasy` families fall back to
   something plain and the font crimes mostly collapse into color crimes.
   Installing `ttf-mscorefonts-installer` recovers Comic Sans and Impact.
+
+## Publishing to the Marketplace
+
+Everything the Marketplace requires is already in the repo: an icon, a
+changelog, a gallery banner, a license, a repository field, and five
+keywords, which is the cap. The only remaining steps need a human with a
+browser:
+
+1. Create a publisher at <https://marketplace.visualstudio.com/manage>. The
+   ID must be exactly `sbowerma` to match `package.json`, or change the
+   `publisher` field to whatever you register.
+2. Create an Azure DevOps Personal Access Token with **Marketplace: Manage**
+   scope, set to **All accessible organizations**. A token scoped to a single
+   org silently fails to authenticate.
+3. Log in and ship:
+
+```sh
+npx --yes @vscode/vsce login sbowerma   # paste the PAT
+npm run publish                          # or: npm run publish -- minor
+```
+
+Regenerate the icon after changing `scripts/make-icon.js`:
+
+```sh
+npm run icon
+```
+
+Note that publishing is close to permanent. You can unpublish a version and
+deprecate an extension, but the publisher ID and the extension ID are yours
+forever, and install counts and issue reports come with them.
 
 ## Known and intentional problems
 
