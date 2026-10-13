@@ -105,22 +105,91 @@ on, and type a paragraph about servers and strings.
 
 ## Install
 
-Clone it, then symlink it into your extensions directory. The folder name
-**must** follow `publisher.name-version` or VS Code will not see it:
+This is not on the Marketplace, so you install it from source. Pick one.
+
+### Option A: build a .vsix (recommended, works everywhere)
+
+Needs Node and npm. Nothing is installed globally; `npx` fetches the packager
+on the fly.
+
+```sh
+git clone https://github.com/soyr-redhat/cursed-vscode.git
+cd cursed-vscode
+npx --yes @vscode/vsce package
+code --install-extension cursed-0.2.0.vsix
+```
+
+Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
+Window"). The `.vsix` is a single self-contained file, so you can hand it to
+someone over Slack and they only need the last line.
+
+If `code` is not on your PATH, open the Command Palette, run
+"Shell Command: Install 'code' command in PATH", or install the `.vsix` from
+the Extensions sidebar via the `...` menu, "Install from VSIX".
+
+### Option B: drop it in the extensions folder
+
+No Node required. The folder name **must** follow `publisher.name-version`
+exactly, or VS Code silently ignores it.
+
+```sh
+# macOS and Linux
+git clone https://github.com/soyr-redhat/cursed-vscode.git \
+  ~/.vscode/extensions/sbowerma.cursed-0.2.0
+```
+
+```powershell
+# Windows
+git clone https://github.com/soyr-redhat/cursed-vscode.git `
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.2.0"
+```
+
+Reload the window. To update later, `git pull` in that folder and reload.
+
+### Option C: symlink, for hacking on it
+
+Keeps the repo wherever you work and links it in, so edits are live after a
+reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.2.0
 ```
 
-Then reload the window (`Cmd+Shift+P`, "Developer: Reload Window"). A fresh
-install is inert: click the status bar pill to start.
-
-To build a shareable `.vsix`:
+### Verify it took
 
 ```sh
-npx --yes @vscode/vsce package
+code --list-extensions --show-versions | grep cursed
+# sbowerma.cursed@0.2.0
 ```
+
+A fresh install is deliberately inert. Nothing changes until you click the
+`cursed` pill in the bottom-right of the status bar.
+
+### Uninstall
+
+```sh
+code --uninstall-extension sbowerma.cursed
+```
+
+Set the level back to 0 **before** uninstalling, so it gets the chance to put
+your theme and fonts back. If you uninstall at level 1 or 2, the settings it
+wrote stay in your `settings.json` and you will have to delete them by hand.
+
+## Other platforms
+
+Every decorative font is referenced through a fallback chain, so nothing
+breaks, but the comedy is uneven:
+
+- **macOS** is the target. Every font resolves: Zapfino, Apple Chancery,
+  Papyrus, Luminari, Zapf Dingbats, Marker Felt, Party LET, the lot.
+- **Windows** gets most of it. Comic Sans, Impact, Papyrus, Wingdings,
+  Segoe Script, Ink Free and Lucida Handwriting all resolve. No Zapfino,
+  which is a genuine loss.
+- **Linux** depends entirely on what you have installed. With only the stock
+  DejaVu set, the generic `cursive` and `fantasy` families fall back to
+  something plain and the font crimes mostly collapse into color crimes.
+  Installing `ttf-mscorefonts-installer` recovers Comic Sans and Impact.
 
 ## Known and intentional problems
 

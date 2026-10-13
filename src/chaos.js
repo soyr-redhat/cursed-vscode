@@ -25,7 +25,7 @@ const STYLE_SPECS = [
     id: 'zapfino',
     tier: 1,
     opts: {
-      textDecoration: css("font-size: 1.9em; font-family: Zapfino, cursive; letter-spacing: 2px;"),
+      textDecoration: css("font-size: 1.9em; font-family: Zapfino, 'Savoye LET', 'Brush Script MT', 'Segoe Script', cursive; letter-spacing: 2px;"),
       color: '#00FFFF'
     }
   },
@@ -33,7 +33,7 @@ const STYLE_SPECS = [
     id: 'chancery',
     tier: 1,
     opts: {
-      textDecoration: css("font-size: 2.3em; font-family: 'Apple Chancery', 'Snell Roundhand', cursive;"),
+      textDecoration: css("font-size: 2.3em; font-family: 'Apple Chancery', 'Snell Roundhand', 'Lucida Handwriting', 'Segoe Script', cursive;"),
       color: '#FFFF00'
     }
   },
@@ -57,7 +57,7 @@ const STYLE_SPECS = [
     id: 'goosebumps',
     tier: 1,
     opts: {
-      textDecoration: css("font-size: 1.8em; font-family: Luminari, Herculanum, fantasy;"),
+      textDecoration: css("font-size: 1.8em; font-family: Luminari, Herculanum, Trattatello, Papyrus, fantasy;"),
       color: '#FF7F00'
     }
   },
@@ -82,7 +82,7 @@ const STYLE_SPECS = [
     id: 'wanted',
     tier: 1,
     opts: {
-      textDecoration: css("font-size: 1.6em; font-family: 'American Typewriter', serif;"),
+      textDecoration: css("font-size: 1.6em; font-family: 'American Typewriter', 'Courier New', serif;"),
       backgroundColor: '#FFFF00',
       border: '2px dashed #FF0000',
       color: '#000000'
@@ -93,7 +93,7 @@ const STYLE_SPECS = [
     id: 'impact',
     tier: 2,
     opts: {
-      textDecoration: css("font-size: 2.1em; font-family: Impact, 'Haettenschweiler', sans-serif; -webkit-text-stroke: 1px #00FFFF;"),
+      textDecoration: css("font-size: 2.1em; font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif; -webkit-text-stroke: 1px #00FFFF;"),
       color: '#000000'
     }
   },
@@ -102,7 +102,7 @@ const STYLE_SPECS = [
     tier: 2,
     opts: {
       // Renders the letter as an unrelated symbol while the real text is untouched.
-      textDecoration: css("font-size: 1.4em; font-family: 'Zapf Dingbats', 'Wingdings', fantasy;"),
+      textDecoration: css("font-size: 1.4em; font-family: 'Zapf Dingbats', Wingdings, Webdings, fantasy;"),
       color: '#FFFFFF'
     }
   },
@@ -118,7 +118,7 @@ const STYLE_SPECS = [
     id: 'tilted',
     tier: 2,
     opts: {
-      textDecoration: css("display: inline-block; transform: rotate(17deg) scale(1.6); font-family: 'Marker Felt', cursive;"),
+      textDecoration: css("display: inline-block; transform: rotate(17deg) scale(1.6); font-family: 'Marker Felt', 'Ink Free', 'Comic Sans MS', cursive;"),
       color: '#9400D3'
     }
   },
@@ -142,7 +142,7 @@ const STYLE_SPECS = [
     id: 'ghost',
     tier: 2,
     opts: {
-      textDecoration: css("opacity: 0.18; font-size: 2.4em; font-family: Zapfino, cursive;"),
+      textDecoration: css("opacity: 0.18; font-size: 2.4em; font-family: Zapfino, 'Brush Script MT', cursive;"),
       color: '#FFFFFF'
     }
   },
@@ -150,7 +150,7 @@ const STYLE_SPECS = [
     id: 'sparkle',
     tier: 2,
     opts: {
-      textDecoration: css("font-size: 1.4em; font-family: 'Party LET', 'Savoye LET', cursive;"),
+      textDecoration: css("font-size: 1.4em; font-family: 'Party LET', 'Savoye LET', 'Brush Script MT', cursive;"),
       color: '#00FF00',
       after: { contentText: '✨' }
     }
