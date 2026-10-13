@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -80,6 +80,11 @@
         "command": "cursed.reroll",
         "title": "Reroll The Dice",
         "category": "CURSED"
+      },
+      {
+        "command": "cursed.mutate",
+        "title": "Cycle Autocorrect Rewriting (off / scratch / everywhere)",
+        "category": "CURSED"
       }
     ],
     "configuration": {
@@ -138,13 +143,19 @@
         },
         "cursed.autocorrect.aggressive": {
           "type": "boolean",
-          "default": false,
-          "description": "Sort cursed suggestions ABOVE your real IntelliSense. Forced on at MAXIMUM."
+          "default": true,
+          "description": "Sort cursed suggestions ABOVE your real IntelliSense. Turn this off and they land at the bottom of the list, where you will never see them."
         },
-        "cursed.autocorrect.mutate": {
-          "type": "boolean",
-          "default": false,
-          "description": "Actually rewrite words as you type them, phone-autocorrect style. Only ever runs in unsaved scratch buffers, never in a real file."
+        "cursed.autocorrect.mutateScope": {
+          "type": "string",
+          "enum": ["off", "scratch", "everywhere"],
+          "default": "scratch",
+          "enumDescriptions": [
+            "Never rewrite. Suggestions only.",
+            "Rewrite words as you type, in unsaved buffers only. A file on disk cannot be mangled behind your back.",
+            "Rewrite words as you type, in every file. Each one is a single Cmd+Z to undo, but it does edit real code."
+          ],
+          "description": "Whether autocorrect actually rewrites a word the moment you finish typing it, phone-autocorrect style."
         },
         "cursed.autocorrect.mutateChance": {
           "type": "number",

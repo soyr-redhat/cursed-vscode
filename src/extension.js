@@ -167,6 +167,23 @@ async function cycleChaos(context) {
   await applyLevel(context, (chaos.getLevel() + 1) % 3);
 }
 
+const MUTATE_SCOPES = ['off', 'scratch', 'everywhere'];
+const MUTATE_BLURB = {
+  off: 'Autocorrect will only ever suggest, never rewrite.',
+  scratch: 'Autocorrect now rewrites words as you type, in unsaved buffers only.',
+  everywhere: 'Autocorrect now rewrites words as you type, in EVERY file. Cmd+Z undoes each one.'
+};
+
+/** off -> scratch -> everywhere -> off. */
+async function cycleMutation() {
+  const current = autocorrect.mutationScope();
+  const next = MUTATE_SCOPES[(MUTATE_SCOPES.indexOf(current) + 1) % MUTATE_SCOPES.length];
+  await vscode.workspace
+    .getConfiguration('cursed')
+    .update('autocorrect.mutateScope', next, vscode.ConfigurationTarget.Global);
+  vscode.window.showInformationMessage(`CURSED: ${MUTATE_BLURB[next]}`);
+}
+
 async function embrace(context) {
   await applyLevel(context, MAXIMUM);
   const quip = EMBRACE_QUIPS[Math.floor(Math.random() * EMBRACE_QUIPS.length)];
@@ -207,6 +224,7 @@ function activate(context) {
     vscode.commands.registerCommand('cursed.embrace', () => embrace(context)),
     vscode.commands.registerCommand('cursed.restore', () => restore(context)),
     vscode.commands.registerCommand('cursed.reroll', () => chaos.reroll()),
+    vscode.commands.registerCommand('cursed.mutate', cycleMutation),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('cursed.chaos.level')) updateStatus();
     })

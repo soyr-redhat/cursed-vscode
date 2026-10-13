@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0
+
+- Fix a bug where words that collide with `Object.prototype` keys
+  (`constructor`, `toString`, `valueOf`) reached the prototype chain through
+  a bare dictionary lookup and produced a completion item with an undefined
+  label, which could make VS Code discard the entire batch of suggestions.
+- `cursed.autocorrect.aggressive` now defaults to `true`. Sorting the cursed
+  suggestions below real IntelliSense buried them at the bottom of a
+  hundred-item list where nobody ever scrolled, so the joke never landed.
+- Replace the `cursed.autocorrect.mutate` boolean with
+  `cursed.autocorrect.mutateScope`: `off`, `scratch`, or `everywhere`. The
+  default is now `scratch` rather than off, so rewriting works out of the box
+  in an untitled buffer without putting real files at risk.
+- Add `CURSED: Cycle Autocorrect Rewriting` to switch scopes from the palette.
+- Document the difference between suggesting and rewriting, which was the
+  actual source of confusion.
+
 ## 0.3.0
 
 - Add a Marketplace icon, generated reproducibly by `scripts/make-icon.js`

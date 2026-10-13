@@ -198,7 +198,12 @@ function suggestionsFor(word) {
   const out = [];
   const lower = word.toLowerCase();
 
-  const entry = DICTIONARY[lower];
+  // Own-property check only. A bare lookup lets words like "constructor" and
+  // "valueOf" reach Object.prototype and return a function, which produced a
+  // completion item with an undefined label and poisoned the whole batch.
+  const entry = Object.prototype.hasOwnProperty.call(DICTIONARY, lower)
+    ? DICTIONARY[lower]
+    : null;
   if (entry) {
     out.push({
       text: entry[0],
@@ -228,16 +233,18 @@ function makeProvider() {
       const cfg = vscode.workspace.getConfiguration('cursed');
       if (!cfg.get('autocorrect.enabled', true)) return undefined;
 
-      // MAXIMUM cursed forces the wrong answers to outrank your real
-      // IntelliSense, without permanently clobbering the user's setting.
+      // Sorting these below real IntelliSense buried them at the bottom of a
+      // hundred-item list, where nobody ever saw them. The point of the
+      // extension is to be in your way, so they now sort first by default.
       const aggressive =
-        cfg.get('autocorrect.aggressive', false) || cfg.get('chaos.level', 1) >= 2;
+        cfg.get('autocorrect.aggressive', true) || cfg.get('chaos.level', 0) >= 2;
       const prefix = aggressive ? '!!!' : 'zzzz';
       const hit = wordAt(document, position);
       const items = [];
 
       if (hit && hit.word.length >= 2) {
         suggestionsFor(hit.word).forEach((s, i) => {
+          if (!s.text || !s.label) return;
           const item = new vscode.CompletionItem(s.label, vscode.CompletionItemKind.Text);
           item.insertText = s.text;
           item.filterText = hit.word;
@@ -263,13 +270,23 @@ function makeProvider() {
 }
 
 // Mutate mode. Rewrites a word the moment you finish typing it, the way a
-// phone does. Gated hard: it only ever touches unsaved scratch buffers, so a
-// real file on disk can never be mangled behind your back.
+// phone does.
+//
+//   off        never
+//   scratch    unsaved buffers only. The default: a file on disk cannot be
+//              mangled behind your back.
+//   everywhere any file. Undoable with one Cmd+Z, but it does edit real code.
 let applyingOurOwnEdit = false;
 
+function mutationScope() {
+  const scope = vscode.workspace.getConfiguration('cursed').get('autocorrect.mutateScope', 'scratch');
+  return ['off', 'scratch', 'everywhere'].includes(scope) ? scope : 'scratch';
+}
+
 function eligibleForMutation(document) {
-  const cfg = vscode.workspace.getConfiguration('cursed');
-  if (!cfg.get('autocorrect.mutate', false)) return false;
+  const scope = mutationScope();
+  if (scope === 'off') return false;
+  if (scope === 'everywhere') return true;
   return document.isUntitled;
 }
 
@@ -293,7 +310,7 @@ function handleTyping(event) {
   const cfg = vscode.workspace.getConfiguration('cursed');
   if (Math.random() >= cfg.get('autocorrect.mutateChance', 0.25)) return;
 
-  const options = suggestionsFor(hit.word);
+  const options = suggestionsFor(hit.word).filter((s) => s.text);
   if (options.length === 0) return;
   const chosen = options[Math.floor(Math.random() * options.length)];
 
@@ -320,4 +337,4 @@ function activate(context) {
   );
 }
 
-module.exports = { activate, suggestionsFor, DICTIONARY };
+module.exports = { activate, suggestionsFor, mutationScope, DICTIONARY };

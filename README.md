@@ -78,6 +78,7 @@ plausible typos. It also always offers `TODO_fix_before_demo`,
 | `CURSED: Embrace The Chaos` | Switches to the theme, sets Zapfino as your editor font, block-outline cursor, 46px line height, Papyrus terminal, and goes straight to MAXIMUM. Saves your old settings first. |
 | `CURSED: Undo My Mistakes` | Restores every setting `embrace` touched, exactly as it was. |
 | `CURSED: Reroll The Dice` | Reshuffles which characters are cursed. |
+| `CURSED: Cycle Autocorrect Rewriting` | off → scratch → everywhere → off. Controls whether autocorrect rewrites your text or only suggests. |
 
 ## Settings
 
@@ -91,17 +92,31 @@ plausible typos. It also always offers `TODO_fix_before_demo`,
 | `cursed.chaos.strobe` | `true` | Reshuffle on a timer at MAXIMUM. |
 | `cursed.chaos.strobeMs` | `2000` | Below 1000 induces nausea. |
 | `cursed.autocorrect.enabled` | `true` | Cursed completions. |
-| `cursed.autocorrect.aggressive` | `false` | Sort cursed suggestions above real ones. Forced on at MAXIMUM. |
-| `cursed.autocorrect.mutate` | `false` | Actually rewrite words as you type. See below. |
+| `cursed.autocorrect.aggressive` | `true` | Sort cursed suggestions above real ones. Turn it off and they land at the bottom of a hundred-item list where you will never see them. |
+| `cursed.autocorrect.mutateScope` | `"scratch"` | `off`, `scratch` (unsaved buffers only), or `everywhere`. See below. |
 | `cursed.autocorrect.mutateChance` | `0.25` | Odds a finished word gets mangled. |
 
-## On mutate mode
+## Suggest versus rewrite
 
-`cursed.autocorrect.mutate` rewrites a word the instant you finish typing it,
-phone-autocorrect style. It is off by default and it is **hard-gated to unsaved
-scratch buffers** (`document.isUntitled`). A file on disk can never be mangled
-behind your back, no matter what you set. To demo it: `Cmd+N`, turn the setting
-on, and type a paragraph about servers and strings.
+There are two separate things, and confusing them is easy:
+
+**Suggesting** is always on. Type `class` and 班級 appears in the completion
+list, sorted to the top. You still have to press Enter to accept it. If you
+see nothing, the autocorrect items are being outranked: check that
+`cursed.autocorrect.aggressive` is `true`.
+
+**Rewriting** swaps the word out from under you the instant you finish typing
+it, with no completion list involved. That is `cursed.autocorrect.mutateScope`:
+
+| Scope | Behavior |
+|---|---|
+| `off` | Never rewrites. Suggestions only. |
+| `scratch` | **Default.** Rewrites in unsaved buffers only, so a file on disk cannot be mangled behind your back. `Cmd+N` and start typing to see it. |
+| `everywhere` | Rewrites in every file, including real source on disk. Each rewrite is a single `Cmd+Z`, but it does edit your code. |
+
+Cycle through them with `CURSED: Cycle Autocorrect Rewriting` in the command
+palette. Rewriting fires on word boundaries (space or newline) at the odds set
+by `cursed.autocorrect.mutateChance`, so not every word gets hit.
 
 ## Install
 
@@ -116,7 +131,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.3.0.vsix
+code --install-extension cursed-0.4.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -135,13 +150,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.3.0
+  ~/.vscode/extensions/sbowerma.cursed-0.4.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.3.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.4.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -153,14 +168,14 @@ reload. The clone has to stay where it is.
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
-ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.3.0
+ln -s "$PWD/cursed-vscode" ~/.vscode/extensions/sbowerma.cursed-0.4.0
 ```
 
 ### Verify it took
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.3.0
+# sbowerma.cursed@0.4.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
