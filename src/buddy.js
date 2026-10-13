@@ -93,8 +93,11 @@ function scanDir(dir) {
 }
 
 /**
- * Explicit list wins, then a scanned folder, then the bundled sprite. Nothing
- * copyrighted ships with the extension: point imageDir at your own GIFs.
+ * Precedence: your explicit list, then your scanned folder, then the bundled
+ * GeoCities GIFs, then the generated sprite as a last resort.
+ *
+ * Only the generated sprite is a flipbook. Real GIFs animate themselves, so
+ * those are a set to pick one from rather than frames to cycle.
  */
 function framePaths(s) {
   if (Array.isArray(s.images) && s.images.length > 0) {
@@ -104,8 +107,9 @@ function framePaths(s) {
     const found = scanDir(s.imageDir);
     if (found.length > 0) return { paths: found, animated: false };
   }
-  // Only the bundled sprite is a flipbook. Your own GIFs animate themselves,
-  // so those are treated as a set to pick one from, not frames to cycle.
+  const bundled = scanDir(path.join(mediaRoot, 'buddies'));
+  if (bundled.length > 0) return { paths: bundled, animated: false };
+
   return { paths: BUNDLED_FRAMES.map((f) => path.join(mediaRoot, f)), animated: true };
 }
 

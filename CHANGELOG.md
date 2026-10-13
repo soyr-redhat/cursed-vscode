@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0
+
+- Bundle 39 vintage GeoCities GIFs in `media/buddies/`, so the buddy is a
+  dancing baby or a spinning skull out of the box instead of a generated
+  sprite. No configuration needed.
+- Buddy source precedence is now: `buddy.images`, then `buddy.imageDir`,
+  then the bundled GIFs, then the generated sprite as a fallback.
+- Add `media/buddies/ATTRIBUTION.md`. The GIFs are unknown-author 1990s
+  clipart recovered via GifCities and are not covered by the repo's MIT
+  license, which applies to the code.
+
 ## 0.7.1
 
 - Add `scripts/fetch-buddies.sh`, which pulls vintage GeoCities GIFs from the
