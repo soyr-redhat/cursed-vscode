@@ -1,4 +1,4 @@
-// Generates icon.png, the 128x128 Marketplace icon, with no dependencies.
+// Generates icon.png, the 128x128 extension icon, with no dependencies.
 // Four clashing quadrants, a black "C" ring, and neon confetti.
 // Run: node scripts/make-icon.js
 

@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.12.0
+
+Slimming pass. No behaviour changes beyond the removals.
+
+- Drop the Marketplace publishing scaffolding: `scripts/publish-check.js`,
+  the `check` and `publish` npm scripts, `galleryBanner`, and the whole
+  publishing section of the README. It is installed from source, and the
+  README now says so plainly.
+- Drop the generated fallback buddy sprite: `scripts/make-buddy.js`,
+  `scripts/png.js`, and `media/buddy-0..3.png`. It existed as a stand-in
+  before real GIFs shipped and has been unreachable since 0.8.0, because 39
+  GIFs are bundled.
+- That removes the flipbook branch from `buddy.js` too: no frame timer, no
+  animated flag, no per-frame repaint. Real GIFs animate themselves.
+- Collapse the three install options in the README down to the two that
+  differ in a way that matters.
+
+README is 263 lines, down from 463. Four scripts remain: `icon`, `buddies`,
+`package`, `reinstall`.
+
 ## 0.11.0
 
 - Change the publisher from `sbowerma` to `soyr-redhat`, matching the GitHub

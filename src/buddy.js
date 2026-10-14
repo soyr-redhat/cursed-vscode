@@ -4,9 +4,6 @@ const fs = require('fs');
 
 const IMAGE_EXT = /\.(gif|png|webp|jpe?g|svg)$/i;
 
-const BUNDLED_FRAMES = ['buddy-0.png', 'buddy-1.png', 'buddy-2.png', 'buddy-3.png'];
-const FRAME_MS = 240;
-
 /**
  * Clippy, but worse. The first match wins, so order matters: put the
  * specific patterns above the catch-alls.
@@ -37,12 +34,10 @@ const GENERIC_ADVICE = [
 const BUTTONS = ['Thanks', 'Go away'];
 
 let frameTypes = [];
-let frameTimer = null;
 let hideTimer = null;
 let scheduleTimer = null;
 let reanchorTimer = null;
 let frameIndex = 0;
-let frameAnimated = true;
 let activeEditor = null;
 let activeRange = null;
 let mediaRoot = '';
@@ -95,23 +90,15 @@ function scanDir(dir) {
 
 /**
  * Precedence: your explicit list, then your scanned folder, then the bundled
- * GeoCities GIFs, then the generated sprite as a last resort.
- *
- * Only the generated sprite is a flipbook. Real GIFs animate themselves, so
- * those are a set to pick one from rather than frames to cycle.
+ * GeoCities GIFs. They animate themselves, so this is a set to pick one from.
  */
 function framePaths(s) {
-  if (Array.isArray(s.images) && s.images.length > 0) {
-    return { paths: s.images, animated: false };
-  }
+  if (Array.isArray(s.images) && s.images.length > 0) return s.images;
   if (s.imageDir) {
     const found = scanDir(s.imageDir);
-    if (found.length > 0) return { paths: found, animated: false };
+    if (found.length > 0) return found;
   }
-  const bundled = scanDir(path.join(mediaRoot, 'buddies'));
-  if (bundled.length > 0) return { paths: bundled, animated: false };
-
-  return { paths: BUNDLED_FRAMES.map((f) => path.join(mediaRoot, f)), animated: true };
+  return scanDir(path.join(mediaRoot, 'buddies'));
 }
 
 function toUri(p) {
@@ -134,10 +121,7 @@ function buildFrames() {
     ? `none; position: absolute; z-index: 99; pointer-events: none; margin-top: ${-Math.round(s.size * 0.45)}px;`
     : 'none; pointer-events: none;';
 
-  const { paths, animated } = framePaths(s);
-  frameAnimated = animated;
-
-  frameTypes = paths.map((p) =>
+  frameTypes = framePaths(s).map((p) =>
     vscode.window.createTextEditorDecorationType({
       rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
       after: {
@@ -192,10 +176,8 @@ function adviceFor(context) {
 }
 
 function banish() {
-  if (frameTimer) clearInterval(frameTimer);
   if (hideTimer) clearTimeout(hideTimer);
   if (reanchorTimer) clearTimeout(reanchorTimer);
-  frameTimer = null;
   hideTimer = null;
   reanchorTimer = null;
   clearAll();
@@ -260,17 +242,9 @@ function summon(context) {
   banish();
   activeEditor = editor;
   activeRange = anchor;
-  // The bundled sprite is a flipbook. A custom GIF animates on its own, so
-  // just pick one of them and leave it alone.
-  frameIndex = frameAnimated ? 0 : Math.floor(Math.random() * frameTypes.length);
+  // GIFs animate themselves, so pick one and leave it alone.
+  frameIndex = Math.floor(Math.random() * frameTypes.length);
   paintFrame();
-
-  if (frameAnimated && frameTypes.length > 1) {
-    frameTimer = setInterval(() => {
-      frameIndex++;
-      paintFrame();
-    }, FRAME_MS);
-  }
 
   hideTimer = setTimeout(banish, s.duration);
 

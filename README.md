@@ -133,9 +133,9 @@ disk, which is worth knowing before you demo this on a repo you care about.
 
 ## Install
 
-This is not on the Marketplace, so you install it from source. Pick one.
+This is not on any marketplace, so you install it from source. Pick one.
 
-### Option A: build a .vsix (recommended, works everywhere)
+### Build a .vsix (recommended)
 
 Needs Node and npm. Nothing is installed globally; `npx` fetches the packager
 on the fly.
@@ -155,7 +155,7 @@ If `code` is not on your PATH, open the Command Palette, run
 "Shell Command: Install 'code' command in PATH", or install the `.vsix` from
 the Extensions sidebar via the `...` menu, "Install from VSIX".
 
-### Option B: drop it in the extensions folder
+### Drop it in the extensions folder
 
 No Node required. The folder name **must** follow `publisher.name-version`
 exactly, or VS Code silently ignores it.
@@ -174,7 +174,7 @@ git clone https://github.com/soyr-redhat/cursed-vscode.git `
 
 Reload the window. To update later, `git pull` in that folder and reload.
 
-### Option C: working on it
+### Working on it
 
 ```sh
 git clone https://github.com/soyr-redhat/cursed-vscode.git
@@ -244,206 +244,6 @@ breaks, but the comedy is uneven:
   DejaVu set, the generic `cursive` and `fantasy` families fall back to
   something plain and the font crimes mostly collapse into color crimes.
   Installing `ttf-mscorefonts-installer` recovers Comic Sans and Impact.
-
-## Publishing to the Marketplace
-
-Everything the Marketplace requires is already in the repo: an icon, a
-changelog, a gallery banner, a license, a repository field, and five
-keywords, which is the cap. The only remaining steps need a human with a
-browser:
-
-1. Create a publisher at <https://marketplace.visualstudio.com/manage>. The
-   ID must be exactly `soyr-redhat` to match `package.json`, or change the
-   `publisher` field to whatever you register.
-2. Create an Azure DevOps Personal Access Token with **Marketplace: Manage**
-   scope, set to **All accessible organizations**. A token scoped to a single
-   org silently fails to authenticate.
-3. Log in and ship:
-
-```sh
-npx --yes @vscode/vsce login soyr-redhat   # paste the PAT
-npm run publish                          # or: npm run publish -- minor
-```
-
-### npm scripts
-
-| Script | What |
-|---|---|
-| `npm run reinstall` | Package and install into VS Code, with cache cleanup and verification. |
-| `npm run check` | Preflight every Marketplace requirement before publishing. |
-| `npm run package` | Build the vsix only. |
-| `npm run icon` | Regenerate `icon.png` from `scripts/make-icon.js`. |
-| `npm run sprite` | Regenerate the fallback buddy sprite frames. |
-| `npm run buddies` | Fetch more GeoCities GIFs into `media/buddies/`. |
-| `npm run publish` | Publish to the Marketplace. Needs a PAT. |
-
-Note that publishing is close to permanent. You can unpublish a version and
-deprecate an extension, but the publisher ID and the extension ID are yours
-forever, and install counts and issue reports come with them.
-
-## The buddy
-
-Every so often a small purple ape appears over your code, blinks at you, and
-offers advice it is not qualified to give. It leaves after seven seconds.
-
-It is a text decoration using `contentIconPath`, so the image is drawn
-directly in the editor rather than in a panel or a tab. It appears at the end
-of a short visible line, lifted up out of the line box so it overlaps your
-code.
-
-It follows you. Scroll the line it is standing on off screen and it hops to
-another visible line rather than vanishing; switch files and it comes with
-you. It stays put while its own line is still in view, so small scrolls do
-not make it twitch around. The departure timer keeps running through all of
-this, so it still leaves on schedule.
-
-| Setting | Default | Notes |
-|---|---|---|
-| `cursed.buddy.mode` | `"auto"` | `auto` follows the level: never at 0, occasional at 1, three times as often at MAXIMUM. Or force `on` / `off`. |
-| `cursed.buddy.images` | `[]` | Absolute paths to your own images or GIFs. One is picked per appearance. |
-| `cursed.buddy.imageDir` | `""` | A folder to scan instead. Used when `images` is empty. |
-| `cursed.buddy.size` | `160` | Pixels. |
-| `cursed.buddy.float` | `true` | Overlap your code. Turn off if a custom image renders clipped and it sits inline instead. |
-| `cursed.buddy.intervalMs` | `90000` | Average gap, jittered plus or minus 40 percent. |
-| `cursed.buddy.durationMs` | `7000` | How long it stays. |
-| `cursed.buddy.popups` | `true` | The Clippy-style notification. |
-| `cursed.buddy.triggers` | see below | Words that summon it instantly when typed. |
-
-### Bring your own GIFs
-
-A generated four-frame sprite (`scripts/make-buddy.js`, drawn from scratch
-with no image dependencies) is the fallback if the GIF folder is ever empty.
-
-**39 vintage GeoCities GIFs ship with the extension**, in `media/buddies/`:
-the classic 3D dancing baby, lasso-twirling cowboys, spinning skulls, a
-dancing banana, hamsters, wizards, pirate skull-and-crossbones, an alien
-holding a "Going my way?" sign, and an "ARE FLYING SAUCERS REAL?" tabloid
-banner. They work out of the box, no configuration.
-
-They are unknown-author clipart from the 1990s, recovered via GifCities and
-documented in [`media/buddies/ATTRIBUTION.md`](media/buddies/ATTRIBUTION.md).
-They are **not** covered by this repo's MIT license, which applies to the
-code. If you authored one and want it gone, open an issue.
-
-To use your own instead:
-
-```
-Cmd+Shift+P → CURSED: Pick Buddy Images...
-```
-
-Pick as many GIFs as you like and one is chosen at random per appearance.
-Animated GIFs animate on their own, so the frame flipbook is skipped for
-custom images. For a whole folder, set `cursed.buddy.imageDir` and it is
-scanned for `.gif`, `.png`, `.webp`, `.jpg`, and `.svg`.
-
-### The fetch script
-
-To get a folder of genuinely stupid vintage GIFs in one go:
-
-```sh
-./scripts/fetch-buddies.sh ~/Pictures/cursed-buddies
-```
-
-It scrapes [GifCities](https://gifcities.org), the Internet Archive's search
-engine over every animated GIF rescued from GeoCities, across sixteen search
-terms (`pirate`, `dancing+baby`, `skull`, `wizard`, `ufo`, `hamster`,
-`dinosaur`, and so on). Then it runs `scripts/filter-buddies.js`, which throws
-out everything that is not actually usable: GeoCities is overwhelmingly 20x20
-bullet points, divider bars, and static icons, so the filter keeps only images
-between 60 and 400 pixels with at least two frames. Expect roughly 40 keepers
-out of 90 downloads.
-
-It prints the `imageDir` line to paste when it finishes.
-
-These GIFs are archived web content of unclear provenance. Pointing your own
-editor at them is fine. Redistributing them is not, which is why this is a
-script rather than a committed media folder.
-
-### Typing triggers
-
-Typing any of these and then a space summons it immediately:
-
-`help` `why` `sorry` `please` `bug` `fix` `todo` `hack` `test` `deploy`
-`production` `friday` `async` `await` `copilot` `claude` `clippy` `bonzi`
-`buddy`
-
-The advice is matched to context where it can be. Type `deploy` on a Friday
-and it is supportive about it. Type `copilot` and it gets territorial.
-Set `cursed.buddy.triggers` to `[]` to turn this off.
-
-## Fake diagnostics
-
-Fabricated errors and warnings, squiggled in the editor and listed in the
-Problems panel with a source of `cursed` and invented error codes like
-`CURSED4817`. They look exactly like real tooling, which is the entire point:
-you will go and look.
-
-> Variable named too confidently.
-> Unreachable code. It is reachable, I just do not like it.
-> Cyclomatic complexity is fine, which is suspicious.
-> Security: an attacker could read this file and learn things.
-
-Some are keyed to what you actually named things. Call a module `utils` and
-it is told it will contain 4,000 lines by March. Name a variable `temp` and
-it is warned the placeholder is reaching production. Single-letter names are
-called bold, unmaintainable, and respected.
-
-Complaints are seeded on the line's own text, so one sticks to a word rather
-than flickering on every keystroke.
-
-| Setting | Default | Notes |
-|---|---|---|
-| `cursed.diagnostics.mode` | `"auto"` | Follows the level. |
-| `cursed.diagnostics.mildIntensity` | `0.02` | Fraction of words complained about at level 1. |
-| `cursed.diagnostics.maxIntensity` | `0.09` | Fraction at MAXIMUM. |
-| `cursed.diagnostics.max` | `40` | Cap per file. Level 1 uses a quarter. |
-
-## Lying inlay hints
-
-Inlay hints are the small grey annotations VS Code renders inline to tell you
-a real inferred type. These are wrong, in the same typeface as the truth:
-
-```
-const count: float64 | vibes = items.length
-function render(thing: whatever): Maybe<Regret>
-let user: Record<string, Sorrow>
-```
-
-The subtlest thing here, because you half believe it. Requires
-`editor.inlayHints.enabled`, which the cursed level turns on for you and
-restores when you switch off.
-
-| Setting | Default | Notes |
-|---|---|---|
-| `cursed.hints.mode` | `"auto"` | Follows the level. |
-| `cursed.hints.mildIntensity` | `0.3` | Fraction of declarations given a wrong type at level 1. |
-| `cursed.hints.maxIntensity` | `0.8` | Fraction at MAXIMUM. |
-| `cursed.hints.max` | `120` | Cap per visible range. |
-
-## Pop-up ads
-
-Prize notifications, fake antivirus warnings, nags about nothing, and a
-progress bar that goes backwards and never finishes.
-
-> CONGRATULATIONS! You are the 1,000,000th line of code!
-> Your free trial of indentation expires in 3 days.
-> Workspace trust: do you trust the authors of this file? You wrote it.
-> WARNING: 4 viruses detected in your variable names.
-
-The buttons do nothing, and the status bar says so afterward. At MAXIMUM a
-quarter of them are **genuine blocking modal dialogs** that take over the
-window until dismissed. Set `cursed.ads.modal` to `false` to keep them as
-dismissible toasts.
-
-`CURSED: Show Me An Advertisement` and `CURSED: Optimize Something` trigger
-them on demand.
-
-| Setting | Default | Notes |
-|---|---|---|
-| `cursed.ads.mode` | `"auto"` | Follows the level. |
-| `cursed.ads.intervalMs` | `150000` | Average gap, jittered. MAXIMUM divides by four. |
-| `cursed.ads.modal` | `true` | Allow blocking dialogs at MAXIMUM. |
-| `cursed.ads.scare` | `true` | Include the fake security warnings. |
 
 ## Known and intentional problems
 
