@@ -2,7 +2,7 @@
   "name": "cursed",
   "displayName": "CURSED: Deluxe Ransom Note Edition",
   "description": "A theme so hostile it should require a waiver. Neon crimes, Zapfino, and an autocorrect that has never written code.",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "publisher": "sbowerma",
   "license": "MIT",
   "icon": "icon.png",
@@ -103,6 +103,16 @@
       {
         "command": "cursed.pickBuddy",
         "title": "Pick Buddy Images...",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.ad",
+        "title": "Show Me An Advertisement",
+        "category": "CURSED"
+      },
+      {
+        "command": "cursed.progress",
+        "title": "Optimize Something",
         "category": "CURSED"
       }
     ],
@@ -276,6 +286,107 @@
             "buddy"
           ],
           "description": "Typing one of these words summons the buddy immediately. Empty disables typing triggers."
+        },
+        "cursed.diagnostics.mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "off",
+            "on"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Follow the cursed level: off at 0, on from level 1 up.",
+            "Never.",
+            "Always, regardless of level."
+          ],
+          "description": "Fabricated errors and warnings in the Problems panel. None of them are real."
+        },
+        "cursed.diagnostics.mildIntensity": {
+          "type": "number",
+          "default": 0.02,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of words that get a fake complaint at level 1."
+        },
+        "cursed.diagnostics.maxIntensity": {
+          "type": "number",
+          "default": 0.09,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of words that get a fake complaint at MAXIMUM."
+        },
+        "cursed.diagnostics.max": {
+          "type": "number",
+          "default": 40,
+          "minimum": 1,
+          "description": "Cap on fake problems per file at MAXIMUM. Level 1 uses a quarter of this."
+        },
+        "cursed.hints.mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "off",
+            "on"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Follow the cursed level: off at 0, on from level 1 up.",
+            "Never.",
+            "Always, regardless of level."
+          ],
+          "description": "Inlay hints showing confidently wrong types and parameter names. Requires editor.inlayHints.enabled."
+        },
+        "cursed.hints.mildIntensity": {
+          "type": "number",
+          "default": 0.3,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of declarations given a wrong type at level 1."
+        },
+        "cursed.hints.maxIntensity": {
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of declarations given a wrong type at MAXIMUM."
+        },
+        "cursed.hints.max": {
+          "type": "number",
+          "default": 120,
+          "minimum": 1,
+          "description": "Cap on hints per visible range."
+        },
+        "cursed.ads.mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "off",
+            "on"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "Follow the cursed level: off at 0, on from level 1 up.",
+            "Never.",
+            "Always, regardless of level."
+          ],
+          "description": "Pop-up advertisements, fake security warnings, and nags about nothing."
+        },
+        "cursed.ads.intervalMs": {
+          "type": "number",
+          "default": 150000,
+          "minimum": 10000,
+          "description": "Average milliseconds between ads, jittered by plus or minus 40 percent. MAXIMUM divides this by four."
+        },
+        "cursed.ads.modal": {
+          "type": "boolean",
+          "default": true,
+          "description": "At MAXIMUM, some ads are genuine blocking modal dialogs. Set false to keep them as dismissible toasts."
+        },
+        "cursed.ads.scare": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include fake antivirus and security warnings."
         }
       }
     }

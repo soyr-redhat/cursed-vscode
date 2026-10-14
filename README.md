@@ -84,6 +84,8 @@ plausible typos. It also always offers `TODO_fix_before_demo`,
 | `CURSED: Summon The Buddy` | Make the buddy appear right now. |
 | `CURSED: Banish The Buddy` | Make it go away. |
 | `CURSED: Pick Buddy Images...` | File picker for your own GIFs. |
+| `CURSED: Show Me An Advertisement` | Pop an ad right now. |
+| `CURSED: Optimize Something` | A progress bar that goes backwards. |
 
 ## Settings
 
@@ -142,7 +144,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.9.0.vsix
+code --install-extension cursed-0.10.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -161,13 +163,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.9.0
+  ~/.vscode/extensions/sbowerma.cursed-0.10.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.9.0"
+  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.10.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -204,7 +206,7 @@ touches entries matching this extension's own id, and only dead paths.
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.9.0
+# sbowerma.cursed@0.10.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
@@ -360,6 +362,80 @@ Typing any of these and then a space summons it immediately:
 The advice is matched to context where it can be. Type `deploy` on a Friday
 and it is supportive about it. Type `copilot` and it gets territorial.
 Set `cursed.buddy.triggers` to `[]` to turn this off.
+
+## Fake diagnostics
+
+Fabricated errors and warnings, squiggled in the editor and listed in the
+Problems panel with a source of `cursed` and invented error codes like
+`CURSED4817`. They look exactly like real tooling, which is the entire point:
+you will go and look.
+
+> Variable named too confidently.
+> Unreachable code. It is reachable, I just do not like it.
+> Cyclomatic complexity is fine, which is suspicious.
+> Security: an attacker could read this file and learn things.
+
+Some are keyed to what you actually named things. Call a module `utils` and
+it is told it will contain 4,000 lines by March. Name a variable `temp` and
+it is warned the placeholder is reaching production. Single-letter names are
+called bold, unmaintainable, and respected.
+
+Complaints are seeded on the line's own text, so one sticks to a word rather
+than flickering on every keystroke.
+
+| Setting | Default | Notes |
+|---|---|---|
+| `cursed.diagnostics.mode` | `"auto"` | Follows the level. |
+| `cursed.diagnostics.mildIntensity` | `0.02` | Fraction of words complained about at level 1. |
+| `cursed.diagnostics.maxIntensity` | `0.09` | Fraction at MAXIMUM. |
+| `cursed.diagnostics.max` | `40` | Cap per file. Level 1 uses a quarter. |
+
+## Lying inlay hints
+
+Inlay hints are the small grey annotations VS Code renders inline to tell you
+a real inferred type. These are wrong, in the same typeface as the truth:
+
+```
+const count: float64 | vibes = items.length
+function render(thing: whatever): Maybe<Regret>
+let user: Record<string, Sorrow>
+```
+
+The subtlest thing here, because you half believe it. Requires
+`editor.inlayHints.enabled`, which the cursed level turns on for you and
+restores when you switch off.
+
+| Setting | Default | Notes |
+|---|---|---|
+| `cursed.hints.mode` | `"auto"` | Follows the level. |
+| `cursed.hints.mildIntensity` | `0.3` | Fraction of declarations given a wrong type at level 1. |
+| `cursed.hints.maxIntensity` | `0.8` | Fraction at MAXIMUM. |
+| `cursed.hints.max` | `120` | Cap per visible range. |
+
+## Pop-up ads
+
+Prize notifications, fake antivirus warnings, nags about nothing, and a
+progress bar that goes backwards and never finishes.
+
+> CONGRATULATIONS! You are the 1,000,000th line of code!
+> Your free trial of indentation expires in 3 days.
+> Workspace trust: do you trust the authors of this file? You wrote it.
+> WARNING: 4 viruses detected in your variable names.
+
+The buttons do nothing, and the status bar says so afterward. At MAXIMUM a
+quarter of them are **genuine blocking modal dialogs** that take over the
+window until dismissed. Set `cursed.ads.modal` to `false` to keep them as
+dismissible toasts.
+
+`CURSED: Show Me An Advertisement` and `CURSED: Optimize Something` trigger
+them on demand.
+
+| Setting | Default | Notes |
+|---|---|---|
+| `cursed.ads.mode` | `"auto"` | Follows the level. |
+| `cursed.ads.intervalMs` | `150000` | Average gap, jittered. MAXIMUM divides by four. |
+| `cursed.ads.modal` | `true` | Allow blocking dialogs at MAXIMUM. |
+| `cursed.ads.scare` | `true` | Include the fake security warnings. |
 
 ## Known and intentional problems
 

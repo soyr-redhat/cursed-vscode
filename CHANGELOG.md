@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.10.0
+
+Three new ways to be in your way, all tied to the cursed level.
+
+- **Fake diagnostics.** Fabricated errors and warnings, squiggled in the
+  editor and listed in the Problems panel with a source of `cursed` and
+  invented error codes. "Variable named too confidently." "Unreachable code.
+  It is reachable, I just do not like it." Some are keyed to what you
+  actually named things, so `utils` gets told it will contain 4,000 lines by
+  March. Seeded on the line's text, so a complaint sticks to a word instead
+  of flickering on every keystroke.
+- **Lying inlay hints.** The small grey inline annotations that normally
+  show a real inferred type. These show `Maybe<Regret>`,
+  `string | undefined | whatever`, and `float64 | vibes`, in the same
+  typeface as the truth. `editor.inlayHints.enabled` is now managed by the
+  level, since the hints do not render without it.
+- **Pop-up ads.** Prize notifications, fake antivirus warnings, nags about
+  nothing, and a progress bar that goes backwards and never finishes. At
+  MAXIMUM a quarter of them are genuine blocking modal dialogs. Buttons do
+  nothing, and say so.
+- Add `scripts/../src/util.js` for the shared level gating and seeded
+  randomness the new modules needed.
+- Backfill the settings snapshot when a new version starts managing a
+  setting the old snapshot never recorded, so restoring cannot clear a value
+  you chose yourself.
+
 ## 0.9.0
 
 - The buddy follows you instead of disappearing. Scrolling its line off

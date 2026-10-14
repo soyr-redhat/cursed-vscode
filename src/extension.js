@@ -2,6 +2,9 @@ const vscode = require('vscode');
 const chaos = require('./chaos');
 const autocorrect = require('./autocorrect');
 const buddy = require('./buddy');
+const diagnostics = require('./diagnostics');
+const hints = require('./hints');
+const ads = require('./ads');
 
 const THEME_NAME = 'CURSED (Crimes Against Humanity)';
 const SAVED_KEY = 'cursed.savedSettings';
@@ -18,7 +21,9 @@ const THEME_CRIMES = {
   'editor.fontLigatures': false,
   'editor.renderWhitespace': 'all',
   'editor.bracketPairColorization.enabled': true,
-  'editor.guides.bracketPairs': 'active'
+  'editor.guides.bracketPairs': 'active',
+  // The lying inlay hints do not render at all without this.
+  'editor.inlayHints.enabled': 'on'
 };
 
 /**
@@ -94,7 +99,20 @@ function updateStatus() {
  */
 async function snapshot(context, cfg) {
   const existing = context.globalState.get(SAVED_KEY);
-  if (existing) return existing;
+  if (existing) {
+    // A new version can start managing a setting the old snapshot never
+    // recorded. Backfill those, or restore would clear a value the user
+    // chose themselves rather than putting it back.
+    const missing = ALL_KEYS.filter((k) => !(k in existing));
+    if (missing.length === 0) return existing;
+
+    for (const key of missing) {
+      const info = cfg.inspect(key);
+      existing[key] = info && info.globalValue !== undefined ? info.globalValue : null;
+    }
+    await context.globalState.update(SAVED_KEY, existing);
+    return existing;
+  }
 
   const saved = {};
   for (const key of ALL_KEYS) {
@@ -207,6 +225,9 @@ function activate(context) {
   chaos.activate(context);
   autocorrect.activate(context);
   buddy.activate(context);
+  diagnostics.activate(context);
+  hints.activate(context);
+  ads.activate(context);
 
   status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -1000);
   status.command = 'cursed.cycle';
