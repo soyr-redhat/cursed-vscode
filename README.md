@@ -144,7 +144,7 @@ on the fly.
 git clone https://github.com/soyr-redhat/cursed-vscode.git
 cd cursed-vscode
 npx --yes @vscode/vsce package
-code --install-extension cursed-0.10.0.vsix
+code --install-extension cursed-0.11.0.vsix
 ```
 
 Then reload the window (`Cmd+Shift+P` or `Ctrl+Shift+P`, "Developer: Reload
@@ -163,13 +163,13 @@ exactly, or VS Code silently ignores it.
 ```sh
 # macOS and Linux
 git clone https://github.com/soyr-redhat/cursed-vscode.git \
-  ~/.vscode/extensions/sbowerma.cursed-0.10.0
+  ~/.vscode/extensions/soyr-redhat.cursed-0.11.0
 ```
 
 ```powershell
 # Windows
 git clone https://github.com/soyr-redhat/cursed-vscode.git `
-  "$env:USERPROFILE\.vscode\extensions\sbowerma.cursed-0.10.0"
+  "$env:USERPROFILE\.vscode\extensions\soyr-redhat.cursed-0.11.0"
 ```
 
 Reload the window. To update later, `git pull` in that folder and reload.
@@ -193,7 +193,7 @@ extension list in `extensions.json` using absolute paths, so a symlink named
 `package.json`, and the next launch fails with:
 
 ```
-Unable to read file '.../sbowerma.cursed-0.7.1/package.json'
+Unable to read file '.../soyr-redhat.cursed-0.7.1/package.json'
 (Error: Unable to resolve nonexistent file ...)
 ```
 
@@ -206,13 +206,21 @@ touches entries matching this extension's own id, and only dead paths.
 
 ```sh
 code --list-extensions --show-versions | grep cursed
-# sbowerma.cursed@0.10.0
+# soyr-redhat.cursed@0.10.0
 ```
 
 A fresh install is deliberately inert. Nothing changes until you click the
 `cursed` pill in the bottom-right of the status bar.
 
 ### Uninstall
+
+```sh
+code --uninstall-extension soyr-redhat.cursed
+```
+
+If you installed anything before 0.11.0, it was published under the old
+`sbowerma.cursed` id. VS Code treats that as a separate extension, so remove
+it too or you will have two of everything:
 
 ```sh
 code --uninstall-extension sbowerma.cursed
@@ -245,7 +253,7 @@ keywords, which is the cap. The only remaining steps need a human with a
 browser:
 
 1. Create a publisher at <https://marketplace.visualstudio.com/manage>. The
-   ID must be exactly `sbowerma` to match `package.json`, or change the
+   ID must be exactly `soyr-redhat` to match `package.json`, or change the
    `publisher` field to whatever you register.
 2. Create an Azure DevOps Personal Access Token with **Marketplace: Manage**
    scope, set to **All accessible organizations**. A token scoped to a single
@@ -253,7 +261,7 @@ browser:
 3. Log in and ship:
 
 ```sh
-npx --yes @vscode/vsce login sbowerma   # paste the PAT
+npx --yes @vscode/vsce login soyr-redhat   # paste the PAT
 npm run publish                          # or: npm run publish -- minor
 ```
 

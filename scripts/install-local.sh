@@ -9,7 +9,7 @@
 # hand-made symlink named publisher.name-VERSION goes stale the moment you
 # bump the version, and the next launch fails with:
 #
-#   Unable to read file '.../sbowerma.cursed-<old>/package.json'
+#   Unable to read file '.../soyr-redhat.cursed-<old>/package.json'
 #
 # Installing the vsix lets VS Code own the folder and its own cache entry.
 # The tradeoff is that the install is a copy, so rerun this after every edit.

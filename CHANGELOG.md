@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.11.0
+
+- Change the publisher from `sbowerma` to `soyr-redhat`, matching the GitHub
+  account that owns the repo.
+
+  This changes the extension id from `sbowerma.cursed` to
+  `soyr-redhat.cursed`, which VS Code treats as an entirely different
+  extension. If you installed an earlier version, uninstall the old id first
+  or you will have both running at once, with two buddies, two ad timers,
+  and two sets of fake diagnostics:
+
+  ```sh
+  code --uninstall-extension sbowerma.cursed
+  ```
+
+  Nothing was published under the old id, so nothing is orphaned on the
+  Marketplace.
+
 ## 0.10.0
 
 Three new ways to be in your way, all tied to the cursed level.
